@@ -1,0 +1,21 @@
+{application, zpt_gridz,
+ [
+  {description, "html grid editor"},
+  {vsn, "0.0.1"},
+  {registered, []},
+  {modules, [clipz, 
+             gridz, 
+             panelz, 
+             rowz, 
+             zpt_gridz_app, 
+             zpt_gridz_scratchpad, 
+             zpt_gridz, 
+             zpt_gridz_store, 
+             zpt_gridz_sup]},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { zpt_gridz_app, []}},
+  {env, []}
+ ]}.
