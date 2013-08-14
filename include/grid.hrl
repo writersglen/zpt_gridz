@@ -5,7 +5,7 @@
 -define(INDENT, 5).
 
 
--record(site, {site_id, created=now(),  page_id, width=?MAXSPAN, page_layout}).
+-record(site, {site_id, created=now(),  page_id, width=?MAXSPAN, title, base, link, style, meta, script, body}).
 
 -record(row, {class="row", span=12, panels=[]}).
 

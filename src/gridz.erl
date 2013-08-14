@@ -1,4 +1,4 @@
-%%% ************************************************************
+
 %%% @copyright 2013 Lloyd R. Prentice
 %%% @author Lloyd R. Prentice lloyd@writersglen.com 
 %%% @version 0.0.1
@@ -21,12 +21,12 @@
 %%% ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 %%% OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 %%% *************************************************************
- 
+
 
 -module(gridz).
 
 % grid helpers
--export([gen_id/0, get_created/1, get_site_id/1, put_site_id/2, get_width/1, get_page_layout/1]).
+-export([gen_id/0, get_created/1, get_site_id/1, put_site_id/2, get_width/1, get_body/1]).
 
 -export([new/1, new/2, clone/2, stack/3, partition/4, subdivide/3]). 
 -export([update_panel_id/3, dummy_clip/3, merge/2, signature/1, dimensions/1, delete_row/2]).
@@ -100,27 +100,27 @@ get_width(Grid) ->
 
 
 %% ************************************************************
-%% get_page_layout/1 
+%% get_body/1 
 %% ************************************************************
 
 
-%% @doc Return page layout
--spec get_page_layout(Grid::tuple()) -> list().
+%% @doc Return body 
+-spec get_body(Grid::tuple()) -> list().
 
-get_page_layout(Grid) ->
-   Grid#site.page_layout.
+get_body(Grid) ->
+   Grid#site.body.
 
 
 %% ************************************************************
-%% put_page_layout/2
+%% put_body/2
 %% ************************************************************
 
 
-%% @doc given grid, return page layout
--spec put_page_layout(Grid::tuple(), Layout::tuple()) -> tuple().
+%% @doc Put body 
+-spec put_body(Grid::tuple(), Layout::tuple()) -> tuple().
 
-put_page_layout(Grid, Layout) ->
-   Grid#site{page_layout=Layout}.
+put_body(Grid, Body) ->
+   Grid#site{body=Body}.
 
 
 %% ************************************************************
@@ -132,8 +132,8 @@ put_page_layout(Grid, Layout) ->
 -spec new(Page_ID::list()) -> tuple().
 
 new(Page_ID) -> 
-   Layout = rowz:stack(["top"]),
-   #site{site_id="grid_lib", page_id=Page_ID, page_layout=Layout}.
+   Body = rowz:stack(["top"]),
+   #site{site_id="grid_lib", page_id=Page_ID, body=Body}.
    
 
 %% ************************************************************
@@ -146,8 +146,8 @@ new(Page_ID) ->
 -spec new(Page_ID::list(), Panel_IDs::list()) -> tuple().
 
 new(Page_ID, Panel_IDs) -> 
-   Layout = rowz:stack(Panel_IDs),
-   #site{site_id="grid_lib", page_id=Page_ID, page_layout=Layout}.
+   Body = rowz:stack(Panel_IDs),
+   #site{site_id="grid_lib", page_id=Page_ID, body=Body}.
    
 
 %% ************************************************************
@@ -171,9 +171,9 @@ clone(Grid, Page_ID) ->
 -spec stack(Grid::tuple(), Panel_ID::list(), Names::list()) -> tuple().
 
 stack(Grid, Panel_ID, Names) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    Layout1 = rowz:stack(Layout, Panel_ID, Names),
-   put_page_layout(Grid, Layout1).
+   put_body(Grid, Layout1).
 
 
 %% ************************************************************
@@ -185,9 +185,9 @@ stack(Grid, Panel_ID, Names) ->
 -spec partition(Grid::tuple(), Panel_ID::list(), N::integer(), Name::list()) -> tuple().
 
 partition(Grid, ID, N, Name) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    Layout1 = rowz:partition(Layout, ID, N, Name),
-   put_page_layout(Grid, Layout1).
+   put_body(Grid, Layout1).
 
 
 %% ************************************************************
@@ -199,9 +199,9 @@ partition(Grid, ID, N, Name) ->
 -spec subdivide(Grid::tuple(), Confirm_ID::list(), Names::list()) -> tuple().
 
 subdivide(Grid, Confirm_ID, Names) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    Layout1 = rowz:subdivide(Layout, Confirm_ID, Names),
-   put_page_layout(Grid, Layout1).
+   put_body(Grid, Layout1).
 
 
 %% ************************************************************
@@ -213,9 +213,9 @@ subdivide(Grid, Confirm_ID, Names) ->
 -spec update_panel_id(Grid::tuple(), Panel_ID::list(), New_ID::list()) -> tuple().
 
 update_panel_id(Grid, Panel_ID, New_ID) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    Layout1 = rowz:update_panel_id(Layout, Panel_ID, New_ID),
-   put_page_layout(Grid, Layout1).
+   put_body(Grid, Layout1).
 
 
 %% ************************************************************
@@ -228,9 +228,9 @@ update_panel_id(Grid, Panel_ID, New_ID) ->
 -spec dummy_clip(Grid::tuple(), Panel_ID::list(), Token::list()) -> tuple().
 
 dummy_clip(Grid, Panel_ID, Token) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    Layout1 = rowz:dummy_clip(Layout, Panel_ID, Token),
-   put_page_layout(Grid, Layout1).
+   put_body(Grid, Layout1).
 
 
 %% ************************************************************
@@ -242,9 +242,9 @@ dummy_clip(Grid, Panel_ID, Token) ->
 -spec merge(Row::tuple(), Confirm_ID::list) -> tuple().
 
 merge(Grid, Confirm_ID) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    Layout1 = rowz:merge(Layout, Confirm_ID),
-   put_page_layout(Grid, Layout1).
+   put_body(Grid, Layout1).
 
 
 %% ************************************************************
@@ -256,7 +256,7 @@ merge(Grid, Confirm_ID) ->
 -spec signature(Grid::tuple()) -> list().
 
 signature(Grid) ->
-   rowz:signature(get_page_layout(Grid)).
+   rowz:signature(get_body(Grid)).
 
 
 %% ************************************************************
@@ -268,7 +268,7 @@ signature(Grid) ->
 -spec dimensions(Grid::tuple()) -> list().
 
 dimensions(Grid) ->
-   rowz:dimensions(get_page_layout(Grid)).
+   rowz:dimensions(get_body(Grid)).
 
 
 %% ************************************************************
@@ -280,9 +280,9 @@ dimensions(Grid) ->
 -spec delete_row(Grid::tuple(), Confirm_ID::list()) -> tuple().
 
 delete_row(Grid, Confirm_ID) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    Layout1 = rowz:delete_row(Layout, Confirm_ID),
-   put_page_layout(Grid, Layout1).
+   put_body(Grid, Layout1).
 
 
 %% ************************************************************
@@ -294,9 +294,9 @@ delete_row(Grid, Confirm_ID) ->
 -spec fluid(Row::tuple()) -> tuple().
 
 fluid(Grid) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    Layout1 = rowz:fluid(Layout),
-   put_page_layout(Grid, Layout1).
+   put_body(Grid, Layout1).
 
 
 %% ************************************************************
@@ -308,9 +308,9 @@ fluid(Grid) ->
 -spec fixed(Row::tuple()) -> tuple().
 
 fixed(Grid) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    Layout1 = rowz:fixed(Layout),
-   put_page_layout(Grid, Layout1).
+   put_body(Grid, Layout1).
 
 
 %% ************************************************************
@@ -322,7 +322,7 @@ fixed(Grid) ->
 -spec to_iolist(Grid::tuple()) -> list().
 
 to_iolist(Grid) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    rowz:to_iolist(Layout).
 
 
@@ -335,7 +335,7 @@ to_iolist(Grid) ->
 -spec to_html(Grid::tuple()) -> list().
 
 to_html(Grid) ->
-   Layout = get_page_layout(Grid),
+   Layout = get_body(Grid),
    rowz:to_html(Layout).
 
 

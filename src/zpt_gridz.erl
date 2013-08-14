@@ -297,7 +297,7 @@ to_lib(Page) ->
     Site_ID = "grid_lib",
     Page_ID = zpt_grid_lib:create_id(Page),
     Layout = gridz:get_page_layout(Page),
-    Record = #site{site_id = Site_ID, page_id = Page_ID, page_layout = Layout},
+    Record = #site{site_id = Site_ID, page_id = Page_ID, body = Layout},
     F = fun() ->
                 mnesia:write(Record)
         end,
